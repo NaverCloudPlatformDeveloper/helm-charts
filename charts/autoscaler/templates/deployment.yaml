@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-autoscaler
+  namespace: kube-system
+  labels:
+    app: cluster-autoscaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cluster-autoscaler
+  template:
+    metadata:
+      labels:
+        app: cluster-autoscaler
+      annotations:
+        timestamp: "{{ date "20060102150405" .Release.Time }}"
+    spec:
+      serviceAccountName: cluster-autoscaler
+      containers:
+        - image: io.kr.ncr.ntruss.com/k8s/cluster-autoscaler:{{ .Values.version }}
+          name: cluster-autoscaler
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 300Mi
+          command:
+            - ./cluster-autoscaler
+            - --v=3
+            - --cloud-provider=nks
+            - --max-node-provision-time=60m0s
+            - --nodes={{ .Values.min }}:{{ .Values.max }}:k8s-default-group
+          env:
+            - name: NKS_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: access-token
+                  name: nks-access-token
+          volumeMounts:
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              readOnly: true
+          imagePullPolicy: "Always"
+      volumes:
+        - name: ssl-certs
+          hostPath:
+            path: "/etc/ssl/certs/ca-certificates.crt"
+

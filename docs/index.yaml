@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   autoscaler:
   - apiVersion: v1
+    appVersion: v1.12.7-beta-202004200000
+    created: "2020-04-21T15:13:56.621987+09:00"
+    description: Cluster Autoscaler for Naver Kubernetes Service
+    digest: a9eb882169ccbc1437e505254c61e5b58dc577e9936fba4d5dd4ede6b8ffc9ac
+    name: autoscaler
+    urls:
+      - autoscaler/autoscaler-1.12.7-beta-202004200000.tgz
+    version: 1.12.7-beta-202004200000
+  - apiVersion: v1
     appVersion: v1.12.7-beta-201909190000
     created: "2019-09-11T11:18:53.640739+09:00"
     description: Cluster Autoscaler for Naver Kubernetes Service
